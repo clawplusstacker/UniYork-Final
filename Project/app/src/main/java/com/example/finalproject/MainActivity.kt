@@ -4,7 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Button
+import android.view.View
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -33,7 +33,7 @@ class MainActivity : AppCompatActivity() {
 
         googleSignInClient = GoogleSignIn.getClient(this , gso)
 
-        findViewById<Button>(R.id.signInButton).setOnClickListener {
+        findViewById<View>(R.id.signInButton).setOnClickListener {
             signInGoogle()
         }
     }
@@ -67,13 +67,12 @@ class MainActivity : AppCompatActivity() {
         val credential = GoogleAuthProvider.getCredential(account.idToken , null)
         auth.signInWithCredential(credential).addOnCompleteListener {
             if (it.isSuccessful){
-                val intent : Intent = Intent(this , HomeActivity::class.java)
+                val intent = Intent(this , HomeActivity::class.java)
                 intent.putExtra("email" , account.email)
                 intent.putExtra("name" , account.displayName)
                 startActivity(intent)
             }else{
                 Toast.makeText(this, it.exception.toString() , Toast.LENGTH_SHORT).show()
-
             }
         }
     }
