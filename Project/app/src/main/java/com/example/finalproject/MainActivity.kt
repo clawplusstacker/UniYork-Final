@@ -14,11 +14,14 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var auth : FirebaseAuth
     private lateinit var googleSignInClient : GoogleSignInClient
+    private val db = Firebase.firestore
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,7 +49,6 @@ class MainActivity : AppCompatActivity() {
     private val launcher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
             result ->
         if (result.resultCode == Activity.RESULT_OK){
-
             val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
             handleResults(task)
         }
@@ -56,26 +58,53 @@ class MainActivity : AppCompatActivity() {
         if (task.isSuccessful){
             val account : GoogleSignInAccount? = task.result
             if (account != null){
-                updateUI(account)
+                addUserToDB(account)
             }
         }else{
             Toast.makeText(this, task.exception.toString() , Toast.LENGTH_SHORT).show()
         }
     }
 
-    private fun updateUI(account: GoogleSignInAccount) {
+
+    private fun addUserToDB(account: GoogleSignInAccount){
+
         val credential = GoogleAuthProvider.getCredential(account.idToken , null)
         auth.signInWithCredential(credential).addOnCompleteListener {
+
             if (it.isSuccessful){
-                val intent = Intent(this , HomeActivity::class.java)
-                intent.putExtra("email" , account.email)
-                intent.putExtra("name" , account.displayName)
-                startActivity(intent)
+
+                val user = db.collection("users").document(account.idToken!!)
+                user.get()
+                    .addOnSuccessListener { document ->
+                        if (document.data != null) {
+                            //If user exists, go to home screen
+                            goHome("not null")
+                        } else {
+                            val user = hashMapOf(
+                                "name" to account.displayName,
+                                "email" to account.email,
+                                "photoURL" to account.photoUrl
+                            )
+
+                            //Create document if User doesn't already exist
+                            db.collection("users").document(account.idToken!!)
+                                .set(user)
+                                .addOnSuccessListener { goHome("complete!") }
+                                .addOnFailureListener {Toast.makeText(this, "Error Creating User" , Toast.LENGTH_SHORT).show()}
+                        }
+                    }
+
             }else{
                 Toast.makeText(this, it.exception.toString() , Toast.LENGTH_SHORT).show()
             }
-        }
+        } //End of Auth
+    }//End of function
+
+
+    private fun goHome(name: String) {
+        val intent = Intent(this , HomeActivity::class.java)
+        intent.putExtra("email", "Lol gotcha")
+        intent.putExtra("name", name)
+        startActivity(intent)
     }
-
-
 }
