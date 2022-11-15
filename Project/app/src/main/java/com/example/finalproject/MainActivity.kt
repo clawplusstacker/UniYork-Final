@@ -29,6 +29,11 @@ class MainActivity : AppCompatActivity() {
 
         auth = FirebaseAuth.getInstance()
 
+        //Bypasses lockscreen if user is already signed in
+        if(auth.currentUser != null){
+            goHome();
+        }
+
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestIdToken(getString(R.string.default_web_client_id))
             .requestEmail()
@@ -41,11 +46,14 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+
+    //Starts Google Sign In Intent
     private fun signInGoogle(){
         val signInIntent = googleSignInClient.signInIntent
         launcher.launch(signInIntent)
     }
 
+    //Gets results from launching Google Sign in and sends them to handler
     private val launcher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
             result ->
         if (result.resultCode == Activity.RESULT_OK){
@@ -54,6 +62,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    //Make sure Google Sign In Worked and sends to DB
     private fun handleResults(task: Task<GoogleSignInAccount>) {
         if (task.isSuccessful){
             val account : GoogleSignInAccount? = task.result
@@ -66,6 +75,7 @@ class MainActivity : AppCompatActivity() {
     }
 
 
+    //Adds user to Firestore DB if they didn't exist then just sends them home
     private fun addUserToDB(account: GoogleSignInAccount){
 
         val credential = GoogleAuthProvider.getCredential(account.idToken , null)
@@ -73,23 +83,25 @@ class MainActivity : AppCompatActivity() {
 
             if (it.isSuccessful){
 
-                val user = db.collection("users").document(account.idToken!!)
+                val user = db.collection("users").document(auth.currentUser!!.uid)
                 user.get()
                     .addOnSuccessListener { document ->
                         if (document.data != null) {
                             //If user exists, go to home screen
-                            goHome("not null")
+                            goHome()
                         } else {
-                            val user = hashMapOf(
+                            val newUser = hashMapOf(
                                 "name" to account.displayName,
                                 "email" to account.email,
-                                "photoURL" to account.photoUrl
-                            )
+                                "photoURL" to account.photoUrl,
+                                "moviesLiked" to mutableListOf<String>(),
+                                "moviesDisliked" to mutableListOf<String>()
+                                )
 
                             //Create document if User doesn't already exist
-                            db.collection("users").document(account.idToken!!)
-                                .set(user)
-                                .addOnSuccessListener { goHome("complete!") }
+                            user
+                                .set(newUser)
+                                .addOnSuccessListener { goHome() }
                                 .addOnFailureListener {Toast.makeText(this, "Error Creating User" , Toast.LENGTH_SHORT).show()}
                         }
                     }
@@ -101,10 +113,8 @@ class MainActivity : AppCompatActivity() {
     }//End of function
 
 
-    private fun goHome(name: String) {
-        val intent = Intent(this , HomeActivity::class.java)
-        intent.putExtra("email", "Lol gotcha")
-        intent.putExtra("name", name)
+    private fun goHome() {
+        val intent = Intent(this , BottomNavActivity::class.java)
         startActivity(intent)
     }
 }
