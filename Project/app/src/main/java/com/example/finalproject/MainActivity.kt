@@ -5,6 +5,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -67,7 +68,15 @@ class MainActivity : AppCompatActivity() {
         if (task.isSuccessful){
             val account : GoogleSignInAccount? = task.result
             if (account != null){
+
                 addUserToDB(account)
+
+                val loadingCircle = findViewById<ProgressBar>(R.id.loadingCircle);
+                loadingCircle.visibility = View.VISIBLE;
+
+                val button = findViewById<View>(R.id.signInButton);
+                button.visibility = View.INVISIBLE;
+
             }
         }else{
             Toast.makeText(this, task.exception.toString() , Toast.LENGTH_SHORT).show()
@@ -108,6 +117,12 @@ class MainActivity : AppCompatActivity() {
 
             }else{
                 Toast.makeText(this, it.exception.toString() , Toast.LENGTH_SHORT).show()
+
+                val loadingCircle = findViewById<ProgressBar>(R.id.loadingCircle);
+                loadingCircle.visibility = View.INVISIBLE;
+
+                val button = findViewById<View>(R.id.signInButton);
+                button.visibility = View.VISIBLE;
             }
         } //End of Auth
     }//End of function

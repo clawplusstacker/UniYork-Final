@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">FlickPick</string>
     <string name="title_activity_bottom_nav">BottomNavActivity</string>
-    <string name="title_home">Home</string>
-    <string name="title_dashboard">Dashboard</string>
-    <string name="title_notifications">Notifications</string>
+    <string name="title_home">Movies</string>
+    <string name="title_dashboard">Liked</string>
+    <string name="title_notifications">Settings</string>
 </resources>

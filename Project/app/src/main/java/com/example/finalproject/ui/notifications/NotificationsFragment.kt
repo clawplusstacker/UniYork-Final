@@ -5,12 +5,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.finalproject.MainActivity
-import com.example.finalproject.R
 import com.example.finalproject.databinding.FragmentNotificationsBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ktx.firestore
@@ -37,6 +34,8 @@ class NotificationsFragment : Fragment() {
 
         binding.signOutButton.setOnClickListener {
             auth.signOut()
+            val intent = Intent(activity, MainActivity::class.java)
+            startActivity(intent)
         }
 
         return root
