@@ -7,7 +7,7 @@
     tools:context=".HomeActivity">
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/signOutButton"
+        android:id="@+id/resetButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
@@ -30,7 +30,7 @@
         android:textStyle="bold"
         android:textColor="@color/black"
         android:textSize="20sp"
-        app:layout_constraintBottom_toTopOf="@+id/signOutButton"
+        app:layout_constraintBottom_toTopOf="@+id/resetButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"

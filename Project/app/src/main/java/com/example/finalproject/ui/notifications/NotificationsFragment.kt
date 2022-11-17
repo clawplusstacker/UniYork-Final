@@ -38,6 +38,9 @@ class NotificationsFragment : Fragment() {
             startActivity(intent)
         }
 
+        binding.nameView.text = auth.currentUser?.displayName ?: "..."
+        binding.emailView.text = auth.currentUser?.email ?: "..."
+
         return root
     }
 

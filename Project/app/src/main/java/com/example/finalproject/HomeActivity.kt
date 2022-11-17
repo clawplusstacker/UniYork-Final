@@ -5,7 +5,6 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
-import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -38,7 +37,7 @@ class HomeActivity : AppCompatActivity() {
             }
 
 
-        findViewById<Button>(R.id.signOutButton).setOnClickListener {
+        findViewById<Button>(R.id.resetButton).setOnClickListener {
             auth.signOut()
             startActivity(Intent(this , MainActivity::class.java))
         }
