@@ -18,18 +18,9 @@ import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.core.Preview
 import androidx.camera.core.CameraSelector
 import android.util.Log
-import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageCaptureException
-import androidx.camera.core.ImageProxy
-import androidx.camera.video.FallbackStrategy
-import androidx.camera.video.MediaStoreOutputOptions
-import androidx.camera.video.Quality
-import androidx.camera.video.QualitySelector
-import androidx.camera.video.VideoRecordEvent
-import androidx.core.content.PermissionChecker
 import com.example.finalproject.databinding.ActivityCameraBinding
 import kotlinx.android.synthetic.main.activity_camera.*
-import java.nio.ByteBuffer
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -96,17 +87,13 @@ class CameraActivity : AppCompatActivity() {
         }
 
         // Create output options object which contains file + metadata
-        val outputOptions = ImageCapture.OutputFileOptions
-            .Builder(contentResolver,
+        val outputOptions = ImageCapture.OutputFileOptions.Builder(contentResolver,
                 MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
                 contentValues)
             .build()
 
-        // Set up image capture listener, which is triggered after photo has
-        // been taken
-        imageCapture.takePicture(
-            outputOptions,
-            ContextCompat.getMainExecutor(this),
+        // Set up image capture listener, which is triggered after photo has been taken
+        imageCapture.takePicture(outputOptions, ContextCompat.getMainExecutor(this),
             object : ImageCapture.OnImageSavedCallback {
                 override fun onError(exc: ImageCaptureException) {
                     Log.e(TAG, "Photo capture failed: ${exc.message}", exc)
@@ -121,10 +108,7 @@ class CameraActivity : AppCompatActivity() {
             }
         )
     }
-    private fun goBack(){
-        val intent = Intent(this , BottomNavActivity::class.java)
-        startActivity(intent)
-    }
+
     private fun startCamera() {
 
         val cameraProviderFuture = ProcessCameraProvider.getInstance(this)
@@ -134,26 +118,21 @@ class CameraActivity : AppCompatActivity() {
             val cameraProvider: ProcessCameraProvider = cameraProviderFuture.get()
 
             // Preview
-            val preview = Preview.Builder()
-                .build()
-                .also {
+            val preview = Preview.Builder().build().also {
                     it.setSurfaceProvider(viewFinder.surfaceProvider)
                 }
 
-            imageCapture = ImageCapture.Builder()
-                .build()
+            imageCapture = ImageCapture.Builder().build()
 
             // Select front camera as a default
-                val cameraSelector = CameraSelector.DEFAULT_FRONT_CAMERA
+            val cameraSelector = CameraSelector.DEFAULT_FRONT_CAMERA
 
             try {
                 // Unbind use cases before rebinding
                 cameraProvider.unbindAll()
 
                 // Bind use cases to camera
-                cameraProvider.bindToLifecycle(
-                    this, cameraSelector, preview, imageCapture)
-
+                cameraProvider.bindToLifecycle(this, cameraSelector, preview, imageCapture)
             } catch(exc: Exception) {
                 Log.e(TAG, "Use case binding failed", exc)
             }
@@ -184,5 +163,10 @@ class CameraActivity : AppCompatActivity() {
                     add(Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 }
             }.toTypedArray()
+    }
+
+    private fun goBack(){
+        val intent = Intent(this , BottomNavActivity::class.java)
+        startActivity(intent)
     }
 }

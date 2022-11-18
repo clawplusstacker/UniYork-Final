@@ -30,6 +30,5 @@ private lateinit var binding: ActivityBottomNavBinding
             R.id.navigation_home, R.id.navigation_dashboard, R.id.navigation_notifications))
         navView.setupWithNavController(navController)
 
-
     }
 }
