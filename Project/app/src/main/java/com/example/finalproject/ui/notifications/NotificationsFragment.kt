@@ -5,8 +5,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.example.finalproject.CameraActivity
 import com.example.finalproject.MainActivity
 import com.example.finalproject.databinding.FragmentNotificationsBinding
 import com.google.firebase.auth.FirebaseAuth
@@ -32,6 +34,20 @@ class NotificationsFragment : Fragment() {
         auth = FirebaseAuth.getInstance()
 
 
+        //New Profile Picture Button
+        binding.newProfilePictureButton.setOnClickListener {
+            //Starts Camera Activity
+            val intent = Intent(activity, CameraActivity::class.java)
+            startActivity(intent)
+        }
+
+
+        //Reset Account Button
+        binding.resetButton.setOnClickListener {
+            //Add Rest Here
+        }
+
+        //Sign out button
         binding.signOutButton.setOnClickListener {
             auth.signOut()
             val intent = Intent(activity, MainActivity::class.java)
@@ -48,4 +64,5 @@ class NotificationsFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
+
 }

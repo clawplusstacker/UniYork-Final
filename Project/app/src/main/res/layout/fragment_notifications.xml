@@ -12,7 +12,7 @@
         android:layout_height="0dp"
         android:layout_marginStart="24dp"
         android:layout_marginEnd="24dp"
-        android:layout_marginBottom="156dp"
+        android:layout_marginBottom="132dp"
         android:text="Reset Account"
         android:textColor="@color/white"
         android:textStyle="bold"
@@ -28,7 +28,7 @@
         android:layout_height="0dp"
         android:layout_marginStart="24dp"
         android:layout_marginEnd="24dp"
-        android:layout_marginBottom="96dp"
+        android:layout_marginBottom="72dp"
         android:text="Sign Out"
         android:textColor="@color/white"
         android:textStyle="bold"
@@ -74,7 +74,7 @@
         tools:src="@tools:sample/avatars" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/floatingActionButton"
+        android:id="@+id/newProfilePictureButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="112dp"
