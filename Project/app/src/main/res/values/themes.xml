@@ -4,4 +4,9 @@
     <style name="CornerSize">
         <item name="cornerSize">50%</item>
     </style>
+
+    <style name="Theme.FinalProject.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
 </resources>

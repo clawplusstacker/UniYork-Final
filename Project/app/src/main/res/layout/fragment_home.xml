@@ -6,17 +6,32 @@
     android:layout_height="match_parent"
     tools:context=".ui.home.HomeFragment">
 
+
+
+
+
     <ImageView
-        android:id="@+id/imageView2"
+        android:id="@+id/movieBanner"
         android:layout_width="0dp"
-        android:layout_height="278dp"
+        android:layout_height="wrap_content"
         android:layout_marginBottom="460dp"
-        android:elevation="30dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.6"
         app:layout_constraintStart_toStartOf="parent"
-        tools:src="@tools:sample/backgrounds/scenic" />
+        tools:src="@tools:sample/backgrounds/scenic"
+    />
+
+    <ImageView
+        android:id="@+id/moviePoster"
+        android:layout_width="128dp"
+        android:layout_height="190dp"
+        android:layout_marginStart="28dp"
+        android:layout_marginBottom="5dp"
+        app:layout_constraintBottom_toBottomOf="@+id/movieBanner"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:src="@tools:sample/avatars"
+    />
 
     <TextView
         android:id="@+id/movieTitle"
@@ -29,7 +44,7 @@
         android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView2"
+        app:layout_constraintTop_toBottomOf="@+id/movieBanner"
         app:layout_constraintVertical_bias="0.0" />
 
     <TextView
@@ -56,7 +71,7 @@
         android:scaleX=".35"
         android:scaleY=".35"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView2" />
+        app:layout_constraintTop_toBottomOf="@+id/movieBanner" />
 
     <TextView
         android:id="@+id/movieDetails"
@@ -74,7 +89,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView2"
+        app:layout_constraintTop_toBottomOf="@+id/movieBanner"
         app:layout_constraintVertical_bias="0.714" />
 
     <ScrollView
@@ -96,11 +111,10 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Overview"
                 android:layout_marginStart="16dp"
+                android:text="Overview"
                 android:textColor="@color/pink"
-                android:textSize="18sp"
-            />
+                android:textSize="18sp" />
 
             <TextView
                 android:id="@+id/movieOverview"
@@ -120,7 +134,7 @@
         android:id="@+id/likeButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="80dp"
+        android:layout_marginBottom="10dp"
         android:clickable="true"
         android:foregroundTint="#FFFFFF"
         android:src="@android:drawable/ic_input_add"
@@ -135,7 +149,7 @@
         android:id="@+id/dislikeButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="80dp"
+        android:layout_marginBottom="10dp"
         android:clickable="true"
         android:filterTouchesWhenObscured="false"
         android:src="@android:drawable/ic_menu_close_clear_cancel"

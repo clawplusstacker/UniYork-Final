@@ -5,8 +5,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.camera.core.impl.utils.ContextUtil.getApplicationContext
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.bumptech.glide.Glide
 import com.example.finalproject.databinding.FragmentHomeBinding
 import okhttp3.*
 import org.json.JSONException
@@ -17,6 +19,8 @@ class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
+
+    private var currentMovie = 0;
 
 
     override fun onCreateView(
@@ -33,20 +37,22 @@ class HomeFragment : Fragment() {
 
         getMovie()
 
-//    val textView: TextView = binding.textHome
-//    homeViewModel.text.observe(viewLifecycleOwner) {
-//      textView.text = it
-//    }
+        binding.likeButton.setOnClickListener{
+            getMovie()
+        }
+        binding.dislikeButton.setOnClickListener{
+            getMovie()
+        }
 
 
         return root
 
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
+//    override fun onDestroyView() {
+//        super.onDestroyView()
+//        _binding = null
+//    }
 
 
     /**
@@ -57,8 +63,16 @@ class HomeFragment : Fragment() {
 
 
     private fun getMovie() {
+
+        if(currentMovie > 39){
+            return;
+        }
+
         binding.movieTitle.text = "Loading..."
-        var url = "https://api.themoviedb.org/3/movie/634649?api_key=63d93b08a5c17f9bbb9d8205524f892f&language=en-US"
+        var movieID = activity?.intent?.getStringArrayExtra("movies")?.get(currentMovie)
+        currentMovie += 1;
+
+        var url = "https://api.themoviedb.org/3/movie/${movieID}?api_key=63d93b08a5c17f9bbb9d8205524f892f&language=en-US"
 
         try {
             getDataFromServer(url) //Here we call the function that will connect to the server
@@ -76,6 +90,20 @@ class HomeFragment : Fragment() {
         binding.movieYear.text = "(${movie["release_date"].toString().substring(0, 4)})"
         binding.movieDetails.text =
             "${movie["release_date"].toString()} - (${movie["country"].toString()}) - ${movie["runtime"]}min\n"
+
+        var imageUrl = "https://image.tmdb.org/t/p/w500/" + movie["poster"]
+        var backUrl = "https://image.tmdb.org/t/p/w500/" + movie["backdrop"]
+
+
+
+
+        Glide.with(activity)
+            .load(backUrl)
+            .into(binding.movieBanner);
+
+        Glide.with(activity)
+            .load(imageUrl)
+            .into(binding.moviePoster);
     }
 
     /**
@@ -119,6 +147,7 @@ class HomeFragment : Fragment() {
                     "rating" to json.getString("vote_average"),
                     "release_date" to json.getString("release_date"),
                     "poster" to json.getString("poster_path"),
+                    "backdrop" to json.getString("backdrop_path"),
                     "country" to json.getJSONArray("production_countries").getJSONObject(0).getString("iso_3166_1"),
                     "genres" to json.getJSONArray("genres"),
                     "runtime" to json.getString("runtime")
