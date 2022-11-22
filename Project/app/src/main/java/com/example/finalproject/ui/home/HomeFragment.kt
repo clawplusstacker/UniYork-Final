@@ -18,6 +18,7 @@ import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.*
 import kotlinx.coroutines.tasks.await
 import okhttp3.*
+import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
 import java.io.IOException
@@ -100,23 +101,25 @@ class HomeFragment : Fragment() {
     /**
      * Gets what movie the User should see.
      */
+    @SuppressLint("SetTextI18n")
     private suspend fun getMovie() {
 
         binding.movieTitle.text = "Loading..."
 
-        var userList = getUserList();
+        val userList = getUserList();
+        val movieList = activity?.intent?.getStringArrayExtra("movies")
 
-        var movieList = activity?.intent?.getStringArrayExtra("movies")
-        var oldCur = currentMovieID;
+        var count = 0;
         if (movieList != null) {
             for(movie in movieList){
                 if(!userList.contains(movie)){
                     currentMovieID = movie;
                     break;
                 }
+                count+=1;
             }
         }
-        if(oldCur == currentMovieID){
+        if(count > 39){
             setNoMovieLeft();
             return
         }
@@ -137,12 +140,25 @@ class HomeFragment : Fragment() {
      */
     @SuppressLint("SetTextI18n")
     private fun setMovie(movie: Map<String, Any>) {
+
+        //Getting genres through JSONArray passed
+        fun setList(list: JSONArray): String {
+            var genres = "";
+            for (i in 0 until list.length()) {
+                val movie = list.getJSONObject(i)
+                genres += movie.getString("name") + ", "
+            }
+            return genres.substring(0, genres.length-2);
+        }
+
+
         binding.movieTitle.text = movie["title"].toString()
         binding.movieOverview.text = movie["overview"].toString();
         binding.movieRating.rating = movie["rating"].toString().toFloat() / 2
         binding.movieYear.text = "(${movie["release_date"].toString().substring(0, 4)})"
         binding.movieDetails.text =
-            "${movie["release_date"].toString()} - (${movie["country"].toString()}) - ${movie["runtime"]}min\n"
+            "${movie["release_date"].toString()} - (${movie["country"].toString()}) - ${movie["runtime"]}min\n" +
+                    setList(movie["genres"] as JSONArray)
 
         var imageUrl = "https://image.tmdb.org/t/p/w500/" + movie["poster"]
         var backUrl = "https://image.tmdb.org/t/p/w500/" + movie["backdrop"]
