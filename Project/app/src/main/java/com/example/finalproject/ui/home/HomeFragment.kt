@@ -83,16 +83,16 @@ class HomeFragment : Fragment() {
     private suspend fun getUserList(): MutableList<String> {
         var userList = mutableListOf<String>()
 
-            currentUser.get()
-                .addOnSuccessListener { document ->
-                    if (document != null) {
-                        userList.addAll(document["moviesLiked"] as Collection<String>)
-                        userList.addAll(document["moviesDisliked"] as Collection<String>)
-                    }
+        currentUser.get()
+            .addOnSuccessListener { document ->
+                if (document != null) {
+                    userList.addAll(document["moviesLiked"] as Collection<String>)
+                    userList.addAll(document["moviesDisliked"] as Collection<String>)
                 }
-                .addOnFailureListener { exception ->
-                    Log.d(TAG, "get failed with ", exception)
-                }.await()
+            }
+            .addOnFailureListener { exception ->
+                Log.d(TAG, "get failed with ", exception)
+            }.await()
 
         return userList;
     }

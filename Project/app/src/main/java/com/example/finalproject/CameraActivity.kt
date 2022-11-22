@@ -4,6 +4,7 @@ import android.Manifest
 import android.content.ContentValues
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
@@ -18,8 +19,14 @@ import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.core.Preview
 import androidx.camera.core.CameraSelector
 import android.util.Log
+import android.view.View
+import android.widget.ProgressBar
 import androidx.camera.core.ImageCaptureException
 import com.example.finalproject.databinding.ActivityCameraBinding
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.ktx.storage
 import kotlinx.android.synthetic.main.activity_camera.*
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -31,8 +38,15 @@ class CameraActivity : AppCompatActivity() {
 
     private var imageCapture: ImageCapture? = null
 
-
     private lateinit var cameraExecutor: ExecutorService
+
+    private var storage = Firebase.storage
+    private var storageRef = storage.reference
+    private var auth = FirebaseAuth.getInstance()
+    private val db = Firebase.firestore
+    private val currentUser = db.collection("users").document(auth.currentUser!!.uid)
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,11 +61,9 @@ class CameraActivity : AppCompatActivity() {
                 this, REQUIRED_PERMISSIONS, REQUEST_CODE_PERMISSIONS)
         }
 
-        // Set up the listeners for take photo and video capture buttons
+        // Set up the listeners for take photo and go back buttons
         viewBinding.imageCaptureButton.setOnClickListener { takePhoto() }
-
         viewBinding.backButton.setOnClickListener { goBack() }
-
         cameraExecutor = Executors.newSingleThreadExecutor()
     }
 
@@ -92,18 +104,39 @@ class CameraActivity : AppCompatActivity() {
                 contentValues)
             .build()
 
+
         // Set up image capture listener, which is triggered after photo has been taken
-        imageCapture.takePicture(outputOptions, ContextCompat.getMainExecutor(this),
-            object : ImageCapture.OnImageSavedCallback {
+        imageCapture.takePicture(outputOptions, ContextCompat.getMainExecutor(this), object : ImageCapture.OnImageSavedCallback {
                 override fun onError(exc: ImageCaptureException) {
                     Log.e(TAG, "Photo capture failed: ${exc.message}", exc)
                 }
 
+
                 override fun onImageSaved(output: ImageCapture.OutputFileResults){
-                    val msg = "Photo capture succeeded: ${output.savedUri}"
-                    Toast.makeText(baseContext, msg, Toast.LENGTH_SHORT).show()
-                    Log.d(TAG, msg)
-                    goBack()
+
+                    Toast.makeText(baseContext, "Photo Taken!", Toast.LENGTH_SHORT).show()
+
+                    val loadingCircle = findViewById<ProgressBar>(R.id.progressBar);
+                    loadingCircle.visibility = View.VISIBLE;
+
+                    val uri = output.savedUri;
+
+                    val photoRef = storageRef.child("${auth.currentUser?.uid}")
+                    if (uri != null) {
+                        photoRef.putFile(uri)
+                            .addOnFailureListener {
+                                Toast.makeText(baseContext, "Photo Could Not Be Uploaded", Toast.LENGTH_SHORT).show()
+                            }.addOnSuccessListener {
+                                photoRef.downloadUrl.addOnSuccessListener {
+                                    currentUser.update("photoURL", it.toString());
+                                }
+                                Toast.makeText(baseContext, "Photo Saved!", Toast.LENGTH_SHORT).show()
+                                goBack()
+                            }
+                    }else{
+                        Toast.makeText(baseContext, "Photo Could Not Be Uploaded", Toast.LENGTH_SHORT).show()
+                        goBack()
+                    }
                 }
             }
         )
@@ -114,7 +147,6 @@ class CameraActivity : AppCompatActivity() {
         val cameraProviderFuture = ProcessCameraProvider.getInstance(this)
 
         cameraProviderFuture.addListener({
-            // Used to bind the lifecycle of cameras to the lifecycle owner
             val cameraProvider: ProcessCameraProvider = cameraProviderFuture.get()
 
             // Preview
@@ -124,14 +156,10 @@ class CameraActivity : AppCompatActivity() {
 
             imageCapture = ImageCapture.Builder().build()
 
-            // Select front camera as a default
             val cameraSelector = CameraSelector.DEFAULT_FRONT_CAMERA
 
             try {
-                // Unbind use cases before rebinding
                 cameraProvider.unbindAll()
-
-                // Bind use cases to camera
                 cameraProvider.bindToLifecycle(this, cameraSelector, preview, imageCapture)
             } catch(exc: Exception) {
                 Log.e(TAG, "Use case binding failed", exc)
