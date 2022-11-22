@@ -20,7 +20,7 @@ class NotificationsFragment : Fragment() {
     private var _binding: FragmentNotificationsBinding? = null
 
     private val binding get() = _binding!!
-    private lateinit var auth : FirebaseAuth
+    private var auth = FirebaseAuth.getInstance()
     private val db = Firebase.firestore
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -30,9 +30,6 @@ class NotificationsFragment : Fragment() {
 
         _binding = FragmentNotificationsBinding.inflate(inflater, container, false)
         val root: View = binding.root
-
-        auth = FirebaseAuth.getInstance()
-
 
         //New Profile Picture Button
         binding.newProfilePictureButton.setOnClickListener {

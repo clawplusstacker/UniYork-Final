@@ -17,6 +17,9 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import okhttp3.*
 import org.json.JSONArray
 import org.json.JSONException
@@ -25,7 +28,7 @@ import java.io.IOException
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var auth : FirebaseAuth
+    private var auth = FirebaseAuth.getInstance()
     private lateinit var googleSignInClient : GoogleSignInClient
     private val db = Firebase.firestore
     private val movieList = mutableListOf<String>()
@@ -34,7 +37,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        auth = FirebaseAuth.getInstance()
 
         //Bypasses lockscreen if user is already signed in
         if(auth.currentUser != null){
@@ -141,8 +143,10 @@ class MainActivity : AppCompatActivity() {
 //        val button = findViewById<View>(R.id.signInButton);
 //        button.visibility = View.INVISIBLE;
 //
-        //Get movies we need first or else we can't go into the app.
-        getPopularMovies();
+        //Get movies we need async first or else we can't go into the app.
+        GlobalScope.launch(Dispatchers.Main) {
+            getPopularMovies();
+        }
 
         var stringArr : Array<String> = movieList.toTypedArray();
 
