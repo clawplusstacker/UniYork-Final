@@ -27,13 +27,14 @@ class HomeFragment : Fragment() {
 
     private val db = Firebase.firestore
     private val auth = FirebaseAuth.getInstance()
+    private val currentUser = db.collection("users").document(auth.currentUser!!.uid)
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
 
-    private var currentMovieID = "634649";
+    private val movieList = mutableListOf<String>()
+    private var currentMovieID = "";
 
-    private val currentUser = db.collection("users").document(auth.currentUser!!.uid)
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -45,6 +46,7 @@ class HomeFragment : Fragment() {
 
         //Get first movie when we create the view.
         GlobalScope.launch(Dispatchers.Main) {
+            getPopularMovies();
             getMovie()
         }
 
@@ -77,6 +79,9 @@ class HomeFragment : Fragment() {
 //    }
 
 
+    ////------------Code for getting the Movie Needed to Show User--------------////
+
+
     /**
      * Gets list of all the movies the user has seen
      */
@@ -107,18 +112,17 @@ class HomeFragment : Fragment() {
         binding.movieTitle.text = "Loading..."
 
         val userList = getUserList();
-        val movieList = activity?.intent?.getStringArrayExtra("movies")
 
         var count = 0;
-        if (movieList != null) {
-            for(movie in movieList){
-                if(!userList.contains(movie)){
-                    currentMovieID = movie;
-                    break;
-                }
-                count+=1;
+
+        for(movie in movieList){
+            if(!userList.contains(movie)){
+                currentMovieID = movie;
+                break;
             }
+            count+=1;
         }
+
         if(count > 39){
             setNoMovieLeft();
             return
@@ -244,6 +248,74 @@ class HomeFragment : Fragment() {
         Glide.with(activity)
             .load("")
             .into(binding.moviePoster)
+    }
+
+
+    ////------------Code for getting the Popular Movie List--------------////
+
+
+    /**
+     * Goes through JSONArray gotten from API and adds the movie
+     * codes to the class variable.
+     */
+    private fun setList(list: JSONArray) {
+        for (i in 0 until list.length()) {
+            val movie = list.getJSONObject(i)
+            movieList.add(movie.getString("id"))
+        }
+    }
+
+
+    private fun getPopularMovies(){
+
+        var url1 = "https://api.themoviedb.org/3/movie/popular?api_key=63d93b08a5c17f9bbb9d8205524f892f&language=en-US&page=1"
+        var url2 = "https://api.themoviedb.org/3/movie/popular?api_key=63d93b08a5c17f9bbb9d8205524f892f&language=en-US&page=2"
+
+        try{
+            getPopularDataFromServer(url1)
+            getPopularDataFromServer(url2)
+        }
+        catch (e: IOException){ //The getDataFromServer function can "throw" an IOException if there is an error. We have to "catch" that here, otherwise our entire app will crash.
+            e.printStackTrace()
+            return
+        }
+    }
+
+    /**
+     * Method that uses OkHTTP to connect to the server
+     * @param url the URL of the remote data source
+     * @throws IOException
+     */
+    private fun getPopularDataFromServer(url:String) {
+        val client = OkHttpClient()
+        val request = Request.Builder().url(url).build()
+        client.newCall(request).enqueue(object : Callback { //This is an inner class that will be used to handle the response.
+
+            override fun onFailure(call: Call, e: IOException) { //If there is an error in the response...
+                e.printStackTrace() //Print the error to the console
+            }
+
+            override fun onResponse(call: Call, response: Response) { //If the response is good...
+                response.use{
+                    if (!response.isSuccessful) throw IOException ("Unexpected code $response") // Ensure that we throw an exception if response is not successful
+                    readJSONPopularMovies(response.body!!.string()) //send the JSON we got from the server to the readJSONFact function.
+                }
+            }
+        })
+    }
+
+
+    fun readJSONPopularMovies(rawJson:String){
+        activity?.runOnUiThread(java.lang.Runnable { //This section has to happen on the same thread as the user interface.
+            try {
+                var json = JSONObject(rawJson)
+                var list = json.getJSONArray("results")
+                setList(list)
+            }
+            catch (e: JSONException){ //Handle any issues where the JSON is badly formed or invalid
+//                setFact("Invalid JSON text")
+            }
+        })
     }
 }
 
