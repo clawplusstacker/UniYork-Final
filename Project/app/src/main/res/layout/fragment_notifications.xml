@@ -62,9 +62,9 @@
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/profilePicture"
-        android:layout_width="170dp"
-        android:layout_height="170dp"
-        android:layout_marginTop="84dp"
+        android:layout_width="190dp"
+        android:layout_height="190dp"
+        android:layout_marginTop="40dp"
         android:adjustViewBounds="true"
         android:scaleType="centerCrop"
         app:layout_constraintEnd_toEndOf="parent"
@@ -79,8 +79,8 @@
         android:id="@+id/newProfilePictureButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="108dp"
-        android:layout_marginTop="128dp"
+        android:layout_marginStart="132dp"
+        android:layout_marginTop="144dp"
         android:clickable="true"
         android:src="@android:drawable/ic_input_add"
         app:backgroundTint="@color/blue"
@@ -88,44 +88,28 @@
         app:layout_constraintTop_toTopOf="@+id/profilePicture" />
 
     <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_marginTop="24dp"
+        android:background="@color/gray"
+        app:layout_constraintTop_toBottomOf="@+id/emailView"
+        tools:layout_editor_absoluteX="0dp" />
+
+    <View
         android:id="@+id/view"
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
-        android:layout_marginTop="76dp"
+        android:layout_marginTop="108dp"
         android:background="@color/gray"
         app:layout_constraintTop_toBottomOf="@+id/profilePicture"
         tools:layout_editor_absoluteX="0dp" />
-
-    <TextView
-        android:id="@+id/emailView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="44dp"
-        android:text="doejohn@gmail.com"
-        android:textColor="@color/pink"
-        android:textSize="16sp"
-        app:layout_constraintStart_toEndOf="@+id/textView5"
-        app:layout_constraintTop_toBottomOf="@+id/nameView" />
-
-    <TextView
-        android:id="@+id/textView5"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="44dp"
-        android:text="Email:"
-        android:textColor="@color/black"
-        android:textSize="16sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView4" />
 
     <TextView
         android:id="@+id/textView4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="112dp"
+        android:layout_marginTop="132dp"
         android:text="Name:"
         android:textColor="@color/black"
         android:textSize="16sp"
@@ -137,19 +121,48 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="112dp"
+        android:layout_marginTop="132dp"
         android:text="John Doe"
         android:textColor="@color/pink"
         android:textSize="16sp"
         app:layout_constraintStart_toEndOf="@+id/textView4"
         app:layout_constraintTop_toBottomOf="@+id/profilePicture" />
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:layout_marginTop="28dp"
-        android:background="@color/gray"
-        app:layout_constraintTop_toBottomOf="@+id/emailView"
-        tools:layout_editor_absoluteX="0dp" />
+    <TextView
+        android:id="@+id/textView5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="36dp"
+        android:text="Email:"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView4" />
+
+    <TextView
+        android:id="@+id/emailView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="36dp"
+        android:text="doejohn@gmail.com"
+        android:textColor="@color/pink"
+        android:textSize="16sp"
+        app:layout_constraintStart_toEndOf="@+id/textView5"
+        app:layout_constraintTop_toBottomOf="@+id/nameView" />
+
+    <TextView
+        android:id="@+id/nameViewLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="36dp"
+        android:text="John Doe"
+        android:textColor="@color/pink"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/profilePicture" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

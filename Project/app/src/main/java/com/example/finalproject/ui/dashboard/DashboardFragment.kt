@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.GridLayoutManager
 import com.example.finalproject.databinding.FragmentDashboardBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ktx.firestore
@@ -21,6 +22,7 @@ import org.json.JSONException
 import org.json.JSONObject
 import java.io.IOException
 
+
 class DashboardFragment : Fragment() {
 
 private var _binding: FragmentDashboardBinding? = null
@@ -32,23 +34,33 @@ private var _binding: FragmentDashboardBinding? = null
     private val db = Firebase.firestore
     private val auth = FirebaseAuth.getInstance()
     private val currentUser = db.collection("users").document(auth.currentUser!!.uid)
+    private lateinit var  photoAdapter: LikedAdapter
 
 
     override fun onCreateView( inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-    val dashboardViewModel =
-            ViewModelProvider(this).get(DashboardViewModel::class.java)
-
-    _binding = FragmentDashboardBinding.inflate(inflater, container, false)
-    val root: View = binding.root
 
 
-      GlobalScope.launch(Dispatchers.Main) {
-          setMovieList();
-          println("ASOIDJOASIDJAOSIJDSD")
-          println(movieImages)
-      }
+        _binding = FragmentDashboardBinding.inflate(inflater, container, false)
+        val root: View = binding.root
 
-    return root
+
+        GlobalScope.launch(Dispatchers.Main) {
+            setMovieList()
+
+            binding.gridView.layoutManager = GridLayoutManager(context,2)
+            photoAdapter = LikedAdapter(requireActivity().applicationContext)
+            binding.gridView.adapter = photoAdapter
+            println("ASOIDHOASJHDOAISJDOAISJD")
+            photoAdapter.setDataList(movieImages)
+        }
+
+        binding.shuffleButton.setOnClickListener{
+            var random = movieImages.get((0..movieImages.size-1).random());
+
+            println(random)
+        }
+
+        return root
   }
 
     override fun onDestroyView() {

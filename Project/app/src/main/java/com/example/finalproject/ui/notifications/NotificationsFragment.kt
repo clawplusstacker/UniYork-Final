@@ -77,6 +77,7 @@ class NotificationsFragment : Fragment() {
             startActivity(intent)
         }
 
+        binding.nameViewLarge.text = auth.currentUser?.displayName ?: "..."
         binding.nameView.text = auth.currentUser?.displayName ?: "..."
         binding.emailView.text = auth.currentUser?.email ?: "..."
 
