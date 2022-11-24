@@ -1,14 +1,16 @@
 package com.example.finalproject.ui.dashboard
 
 import android.content.ContentValues
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
+import com.example.finalproject.MoviePreviewActivity
 import com.example.finalproject.databinding.FragmentDashboardBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ktx.firestore
@@ -18,6 +20,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import okhttp3.*
+import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
 import java.io.IOException
@@ -29,7 +32,7 @@ private var _binding: FragmentDashboardBinding? = null
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
-    private var movieImages = mutableListOf<String>()
+    private var moviesLiked = mutableListOf<Map<String, Any>>()
 
     private val db = Firebase.firestore
     private val auth = FirebaseAuth.getInstance()
@@ -46,18 +49,29 @@ private var _binding: FragmentDashboardBinding? = null
 
         GlobalScope.launch(Dispatchers.Main) {
             setMovieList()
-
-            binding.gridView.layoutManager = GridLayoutManager(context,2)
-            photoAdapter = LikedAdapter(requireActivity().applicationContext)
-            binding.gridView.adapter = photoAdapter
-            println("ASOIDHOASJHDOAISJDOAISJD")
-            photoAdapter.setDataList(movieImages)
         }
 
-        binding.shuffleButton.setOnClickListener{
-            var random = movieImages.get((0..movieImages.size-1).random());
 
-            println(random)
+        //Get random movie
+        binding.shuffleButton.setOnClickListener{
+
+            if(moviesLiked.size > 0) {
+
+                var data = moviesLiked.get((0..moviesLiked.size - 1).random());
+
+                var intent = Intent(this.context, MoviePreviewActivity::class.java)
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.putExtra("title", data["title"].toString())
+                intent.putExtra("overview", data["overview"].toString())
+                intent.putExtra("rating", data["rating"].toString())
+                intent.putExtra("release_date", data["release_date"].toString())
+                intent.putExtra("poster", data["poster"].toString())
+                intent.putExtra("backdrop", data["backdrop"].toString())
+                intent.putExtra("country", data["country"].toString())
+                intent.putExtra("genres", data["genres"].toString())
+                intent.putExtra("runtime", data["runtime"].toString())
+                startActivity(intent)
+            }
         }
 
         return root
@@ -138,8 +152,39 @@ private var _binding: FragmentDashboardBinding? = null
             try {
                 var json = JSONObject(rawJson)
                 var posterpath = json.getString("poster_path")
-                movieImages.add("https://image.tmdb.org/t/p/w500/${posterpath}")
-                println(movieImages)
+                var backdroppath = json.getString("backdrop_path")
+
+                fun setList(list: JSONArray): String {
+                    var genres = "";
+                    for (i in 0 until list.length()) {
+                        val movie = list.getJSONObject(i)
+                        genres += movie.getString("name") + ", "
+                    }
+                    return genres.substring(0, genres.length-2);
+                }
+
+                var movie = mapOf(
+                    "title" to json.getString("title"),
+                    "overview" to json.getString("overview"),
+                    "rating" to json.getString("vote_average"),
+                    "release_date" to json.getString("release_date"),
+                    "poster" to "https://image.tmdb.org/t/p/w500/${posterpath}",
+                    "backdrop" to "https://image.tmdb.org/t/p/w500/${backdroppath}",
+                    "country" to json.getJSONArray("production_countries").getJSONObject(0).getString("iso_3166_1"),
+                    "genres" to setList(json.getJSONArray("genres")),
+                    "runtime" to json.getString("runtime")
+                )
+                //Add movie to list
+                moviesLiked.add(movie)
+
+                //Hide loading screem
+                binding.likedLoading.visibility = View.INVISIBLE;
+
+                binding.gridView.layoutManager = GridLayoutManager(context,2)
+                photoAdapter = LikedAdapter(requireActivity().applicationContext)
+                binding.gridView.adapter = photoAdapter
+                photoAdapter.setDataList(moviesLiked)
+
             } catch (e: JSONException) {
                 Log.d(ContentValues.TAG, "get failed with ", e)
             }

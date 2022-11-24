@@ -17,14 +17,6 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import okhttp3.*
-import org.json.JSONArray
-import org.json.JSONException
-import org.json.JSONObject
-import java.io.IOException
 
 class MainActivity : AppCompatActivity() {
 
@@ -78,7 +70,7 @@ class MainActivity : AppCompatActivity() {
 
                 addUserToDB(account)
 
-                val loadingCircle = findViewById<ProgressBar>(R.id.loadingCircle);
+                val loadingCircle = findViewById<ProgressBar>(R.id.likedLoading);
                 loadingCircle.visibility = View.VISIBLE;
 
                 val button = findViewById<View>(R.id.signInButton);
@@ -125,7 +117,7 @@ class MainActivity : AppCompatActivity() {
             }else{
                 Toast.makeText(this, it.exception.toString() , Toast.LENGTH_SHORT).show()
 
-                val loadingCircle = findViewById<ProgressBar>(R.id.loadingCircle);
+                val loadingCircle = findViewById<ProgressBar>(R.id.likedLoading);
                 loadingCircle.visibility = View.INVISIBLE;
 
                 val button = findViewById<View>(R.id.signInButton);

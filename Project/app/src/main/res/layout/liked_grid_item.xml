@@ -1,11 +1,13 @@
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="150dp"
     android:layout_height="220dp"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    app:cardCornerRadius="10dp"
+    android:layout_marginBottom="30dp"
+    android:layout_marginTop="30dp"
+    android:layout_marginLeft="50dp"
+    android:layout_marginRight="50dp"
     app:cardBackgroundColor="@android:color/white"
-    android:layout_margin="50dp"
-    app:cardElevation="8dp">
+    app:cardCornerRadius="10dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -13,11 +15,11 @@
         android:orientation="vertical">
 
         <ImageView
+            android:id="@+id/posterView"
             android:layout_width="150dp"
             android:layout_height="220dp"
-            android:id="@+id/posterView"
-            android:scaleType="fitXY"
-        />
+            android:clickable="false"
+            android:scaleType="fitXY" />
 
     </LinearLayout>
 </androidx.cardview.widget.CardView>
