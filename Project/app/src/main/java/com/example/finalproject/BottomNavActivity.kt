@@ -36,5 +36,8 @@ private lateinit var binding: ActivityBottomNavBinding
         navView.setupWithNavController(navController)
 
     }
-
+    //We dont want the user to be able to go back to login without logging out first.
+    override fun onBackPressed() {
+        return;
+    }
 }

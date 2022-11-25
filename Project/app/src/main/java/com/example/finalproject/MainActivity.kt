@@ -2,12 +2,12 @@ package com.example.finalproject
 
 import android.app.Activity
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -130,6 +130,11 @@ class MainActivity : AppCompatActivity() {
     private fun goHome() {
         val intent = Intent(this , BottomNavActivity::class.java)
         startActivity(intent)
+    }
+
+    //We dont want the user to be able to go back to home without logging in first.
+    override fun onBackPressed() {
+        return;
     }
 
 }

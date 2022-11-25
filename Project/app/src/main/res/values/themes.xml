@@ -1,6 +1,10 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Removed top title bar -->
-    <style name="Theme.FinalProject" parent="Theme.MaterialComponents.DayNight.NoActionBar"/>
+    <style name="Theme.FinalProject" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="android:statusBarColor">@color/pink</item>
+    </style>
+
+
     <style name="CornerSize">
         <item name="cornerSize">50%</item>
     </style>

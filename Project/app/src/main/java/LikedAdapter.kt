@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.ContextCompat.startActivity
@@ -14,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.finalproject.MoviePreviewActivity
 import com.example.finalproject.R
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import org.json.JSONArray
 
 class LikedAdapter(var context: Context) : RecyclerView.Adapter<LikedAdapter.ViewHolder>() {
@@ -27,9 +29,11 @@ class LikedAdapter(var context: Context) : RecyclerView.Adapter<LikedAdapter.Vie
     // Provide a direct reference to each of the views with data items
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var image: ImageView
+        var button: FloatingActionButton
 
         init {
             image = itemView.findViewById(R.id.posterView)
+            button = itemView.findViewById(R.id.likedButton)
         }
     }
 
@@ -52,8 +56,7 @@ class LikedAdapter(var context: Context) : RecyclerView.Adapter<LikedAdapter.Vie
             .into(holder.image)
 
 
-
-        holder.image.setOnClickListener{
+        holder.button.setOnClickListener{
 
             var intent = Intent(this.context, MoviePreviewActivity::class.java)
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -63,7 +66,6 @@ class LikedAdapter(var context: Context) : RecyclerView.Adapter<LikedAdapter.Vie
             intent.putExtra("release_date", data["release_date"].toString())
             intent.putExtra("poster", data["poster"].toString())
             intent.putExtra("backdrop", data["backdrop"].toString())
-            intent.putExtra("country", data["country"].toString())
             intent.putExtra("genres", data["genres"].toString())
             intent.putExtra("runtime", data["runtime"].toString())
             startActivity(this.context, intent, Bundle())

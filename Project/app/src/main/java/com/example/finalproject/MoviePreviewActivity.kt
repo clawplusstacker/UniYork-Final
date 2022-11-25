@@ -22,7 +22,7 @@ class MoviePreviewActivity : AppCompatActivity() {
         findViewById<RatingBar>(R.id.movieRating).rating = intent.getStringExtra("rating").toString().toFloat() / 2
         findViewById<TextView>(R.id.movieOverview).text = intent.getStringExtra("overview")
         findViewById<TextView>(R.id.movieYear).text = "(${intent.getStringExtra("release_date").toString().substring(0,4)})"
-        findViewById<TextView>(R.id.movieDetails).text = "${intent.getStringExtra("release_date")} - (${intent.getStringExtra("country")}) " +
+        findViewById<TextView>(R.id.movieDetails).text = "${intent.getStringExtra("release_date")} " +
                             "- ${intent.getStringExtra("runtime")}min\n${intent.getStringExtra("genres")}"
 
 

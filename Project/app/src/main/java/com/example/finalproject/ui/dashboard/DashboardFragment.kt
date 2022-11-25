@@ -67,7 +67,6 @@ private var _binding: FragmentDashboardBinding? = null
                 intent.putExtra("release_date", data["release_date"].toString())
                 intent.putExtra("poster", data["poster"].toString())
                 intent.putExtra("backdrop", data["backdrop"].toString())
-                intent.putExtra("country", data["country"].toString())
                 intent.putExtra("genres", data["genres"].toString())
                 intent.putExtra("runtime", data["runtime"].toString())
                 startActivity(intent)
@@ -103,6 +102,11 @@ private var _binding: FragmentDashboardBinding? = null
     private suspend fun setMovieList() {
 
         val movieList = getLikedMovies();
+
+        if(movieList.size == 0){
+            binding.likedLoading.visibility = View.INVISIBLE;
+            return;
+        }
 
         for(movie in movieList){
             var url = "https://api.themoviedb.org/3/movie/${movie}?api_key=63d93b08a5c17f9bbb9d8205524f892f&language=en-US"
@@ -170,7 +174,6 @@ private var _binding: FragmentDashboardBinding? = null
                     "release_date" to json.getString("release_date"),
                     "poster" to "https://image.tmdb.org/t/p/w500/${posterpath}",
                     "backdrop" to "https://image.tmdb.org/t/p/w500/${backdroppath}",
-                    "country" to json.getJSONArray("production_countries").getJSONObject(0).getString("iso_3166_1"),
                     "genres" to setList(json.getJSONArray("genres")),
                     "runtime" to json.getString("runtime")
                 )

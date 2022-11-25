@@ -45,7 +45,6 @@ class HomeFragment : Fragment() {
         //Get first movie when we create the view.
         GlobalScope.launch(Dispatchers.Main) {
             getPopularMovies();
-            getMovie()
         }
 
         binding.likeButton.setOnClickListener{
@@ -108,6 +107,8 @@ class HomeFragment : Fragment() {
     private suspend fun getMovie() {
 
         binding.movieTitle.text = "Loading..."
+        binding.homeLoading.visibility = View.VISIBLE;
+
 
         val userList = getUserList();
 
@@ -143,6 +144,8 @@ class HomeFragment : Fragment() {
     @SuppressLint("SetTextI18n")
     private fun setMovie(movie: Map<String, Any>) {
 
+        binding.homeLoading.visibility = View.INVISIBLE;
+
         //Getting genres through JSONArray passed
         fun setList(list: JSONArray): String {
             var genres = "";
@@ -158,8 +161,7 @@ class HomeFragment : Fragment() {
         binding.movieOverview.text = movie["overview"].toString();
         binding.movieRating.rating = movie["rating"].toString().toFloat() / 2
         binding.movieYear.text = "(${movie["release_date"].toString().substring(0, 4)})"
-        binding.movieDetails.text =
-            "${movie["release_date"].toString()} - (${movie["country"].toString()}) - ${movie["runtime"]}min\n" +
+        binding.movieDetails.text = "${movie["release_date"].toString()} - ${movie["runtime"]}min\n" +
                     setList(movie["genres"] as JSONArray)
 
         var imageUrl = "https://image.tmdb.org/t/p/w500/" + movie["poster"]
@@ -216,14 +218,14 @@ class HomeFragment : Fragment() {
                     "release_date" to json.getString("release_date"),
                     "poster" to json.getString("poster_path"),
                     "backdrop" to json.getString("backdrop_path"),
-                    "country" to json.getJSONArray("production_countries").getJSONObject(0).getString("iso_3166_1"),
                     "genres" to json.getJSONArray("genres"),
                     "runtime" to json.getString("runtime")
                 )
                 setMovie(movie)
 
             } catch (e: JSONException) {
-                binding.movieTitle.text = "INVALID JSON TEXT"
+                binding.movieTitle.text = "Error, Please Try Again Later."
+                binding.homeLoading.visibility = View.INVISIBLE
             }
         })
     }
@@ -232,6 +234,9 @@ class HomeFragment : Fragment() {
      * Change UI if the user has run out of movies
      */
     private fun setNoMovieLeft(){
+
+        binding.homeLoading.visibility = View.INVISIBLE;
+
 
         binding.movieTitle.text = "There are no movies left :("
         binding.movieOverview.text = "Check back tomorrow for updated popular movies.";
@@ -309,6 +314,9 @@ class HomeFragment : Fragment() {
                 var json = JSONObject(rawJson)
                 var list = json.getJSONArray("results")
                 setList(list)
+                GlobalScope.launch (Dispatchers.Main){
+                    getMovie()
+                }
             }
             catch (e: JSONException){ //Handle any issues where the JSON is badly formed or invalid
 //                setFact("Invalid JSON text")
