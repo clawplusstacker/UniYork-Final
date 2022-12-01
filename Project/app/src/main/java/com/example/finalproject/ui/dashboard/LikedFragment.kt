@@ -7,7 +7,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.finalproject.MoviePreviewActivity
@@ -26,7 +25,7 @@ import org.json.JSONObject
 import java.io.IOException
 
 
-class DashboardFragment : Fragment() {
+class LikedFragment : Fragment() {
 
 private var _binding: FragmentDashboardBinding? = null
     // This property is only valid between onCreateView and
@@ -82,6 +81,7 @@ private var _binding: FragmentDashboardBinding? = null
     }
 
 
+    //Gets all of the users liked movies
     private suspend fun getLikedMovies(): MutableList<String> {
 
         var movieList = mutableListOf<String>()
@@ -99,6 +99,7 @@ private var _binding: FragmentDashboardBinding? = null
         return movieList
     }
 
+    //Sets movielist to the users liked movies by getting the json data from API
     private suspend fun setMovieList() {
 
         val movieList = getLikedMovies();
