@@ -32,6 +32,14 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 
 
+/**
+ Most of the code for the caemera was based on this source:
+
+ Android Developers. (n.d.). Getting Started with CameraX. [online]
+ Available at: https://developer.android.com/codelabs/camerax-getting-started#1
+ [Accessed 22 Nov. 2022].
+
+ */
 
 class CameraActivity : AppCompatActivity() {
     private lateinit var viewBinding: ActivityCameraBinding

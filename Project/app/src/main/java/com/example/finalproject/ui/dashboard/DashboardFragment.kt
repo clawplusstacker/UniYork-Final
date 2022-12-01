@@ -183,6 +183,12 @@ private var _binding: FragmentDashboardBinding? = null
                 //Hide loading screem
                 binding.likedLoading.visibility = View.INVISIBLE;
 
+
+                /**
+                    Laksara, P. (2021). RecyclerView with Grid Layout in Kotlin. [online]
+                    Medium. Available at: https://pasindulaksara.medium.com/recyclerview-
+                    with-grid-layout-in-kotlin-414d780c47ae [Accessed 25 Nov. 2022].
+                 */
                 binding.gridView.layoutManager = GridLayoutManager(context,2)
                 photoAdapter = LikedAdapter(requireActivity().applicationContext)
                 binding.gridView.adapter = photoAdapter

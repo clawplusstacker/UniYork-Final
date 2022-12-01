@@ -4,7 +4,12 @@
         <item name="android:statusBarColor">@color/pink</item>
     </style>
 
-
+    <!--
+        Corner size taken from:
+        Stack Overflow. (n.d.). android - ImageView in circular through XML. [online]
+        Available at: https://stackoverflow.com/questions/22105775/imageview-in-circular-
+        through-xml#:~:text=Simply%20put%20a%20circular_crop. [Accessed 16 Nov. 2022].
+    -->
     <style name="CornerSize">
         <item name="cornerSize">50%</item>
     </style>

@@ -53,8 +53,15 @@ class NotificationsFragment : Fragment() {
                 }
         }
 
+        /**
+            Alert Dialog Was Taken From Here:
+            Anon, (n.d.). Kotlin Android - AlertDialog - Example. [online]
+            Available at: https://www.tutorialkart.com/kotlin-android/android-alert-dialog-example/ [
+            Accessed 22 Nov. 2022].
+         */
         //Reset Account Button
         binding.resetButton.setOnClickListener {
+
             val dialogBuilder = AlertDialog.Builder(activity)
             dialogBuilder.setMessage("Are you sure you want to reset your account? This will clear all your likes and dislikes.")
 

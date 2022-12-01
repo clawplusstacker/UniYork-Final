@@ -52,6 +52,13 @@
         app:layout_constraintTop_toTopOf="parent" />
 
 
+    <!--
+        Horizontal line based on:
+        Stack Overflow. (n.d.). Android Drawing Separator/Divider Line in Layout? [online]
+        Available at: https://stackoverflow.com/questions/5049852/android-drawing-
+        separator-divider-line-in-layout [Accessed 16 Nov. 2022].
+    -->
+
     <View
         android:layout_width="match_parent"
         android:layout_height="0.5dp"

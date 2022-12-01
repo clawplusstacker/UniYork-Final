@@ -18,6 +18,14 @@ import com.example.finalproject.R
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import org.json.JSONArray
 
+/**
+ Adapter was based on this source:
+
+ Laksara, P. (2021). RecyclerView with Grid Layout in Kotlin. [online]
+ Medium. Available at: https://pasindulaksara.medium.com/recyclerview
+ -with-grid-layout-in-kotlin-414d780c47ae [Accessed 25 Nov. 2022].
+
+ */
 class LikedAdapter(var context: Context) : RecyclerView.Adapter<LikedAdapter.ViewHolder>() {
 
     private var dataList = emptyList<Map<String, Any>>()

@@ -1,4 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    Stack Overflow. (n.d.). android - How to change inactive color on bottom navigation? [online]
+    Available at: https://stackoverflow.com/questions/38799535/how-to-change-inactive-color
+    -on-bottom-navigation [Accessed 25 Nov. 2022].
+-->
+
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:color="@color/pink" android:state_checked="true"/>
     <item android:color="@color/gray2"/>

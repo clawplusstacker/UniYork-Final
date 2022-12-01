@@ -24,6 +24,15 @@ class MainActivity : AppCompatActivity() {
     private lateinit var googleSignInClient : GoogleSignInClient
     private val db = Firebase.firestore
 
+
+    /**
+     * All code for singing in with firebase auth is based on this source:
+     *
+     * www.youtube.com. (2022). Google Sign In using Firebase in Kotlin (Android Studio 2022 #androidstudio. [online]
+     * Available at: https://www.youtube.com/watch?v=_318sOlkJBQ&ab_channel=CodingSTUFF
+     * [Accessed 14 Nov. 2022].
+     *
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
