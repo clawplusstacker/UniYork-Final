@@ -73,9 +73,13 @@ class MainActivity : AppCompatActivity() {
 
     //Make sure Google Sign In Worked and sends to DB
     private fun handleResults(task: Task<GoogleSignInAccount>) {
+
+        println("HEYHEYHYEHYEHEYHEY")
+
         if (task.isSuccessful){
             val account : GoogleSignInAccount? = task.result
             if (account != null){
+
 
                 addUserToDB(account)
 
